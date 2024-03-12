@@ -1,17 +1,19 @@
-import React from 'react'
+import React from 'react';
 import { isLoggedIn } from '../components/helper/utils/auth.utils';
-import Dashboard from '../components/Dashboard/Dashboard';
-import { Navigate } from 'react-router-dom';
+import { Navigate, RouteProps } from 'react-router-dom';
 
-const PrivateRoute = () => {
-    const isAuthenticated = isLoggedIn();
-    return isAuthenticated ? (
-        <React.Fragment>
-            <Dashboard />
-        </React.Fragment>
-    ) : (
-        <Navigate to="/login" />
-    )
+interface PrivateRouteProps  {
+    element: React.ReactNode;
 }
 
-export default PrivateRoute
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ element, ...rest }) => {
+    const isAuthenticated = isLoggedIn();
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return <>{element}</>;
+}
+
+export default PrivateRoute;
